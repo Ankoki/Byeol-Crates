@@ -1,0 +1,35 @@
+# Any message in the messages.yml will be coloured according to &<colour code>.
+# Hex-codes are also supported on 1.16 and above through <#hexcode> (including the <>).
+
+# The prefix for all messages.
+prefix: §eb§cCrates §eℑ
+
+# Messages with no expressions.
+no-permission-command-error: §cYou do not have the permission to use this command.
+must-be-player-error: §cYou must be a player to use this command.
+invalid-crate-id-error: §cThe given ID is not a valid crate id.
+set-block-too-far-error: §cYou must be looking at a block less than 20 blocks away.
+invalid-player-error: §cThe given player is not online.
+
+# Messages with the following expressions:
+# • <crate-name> = The name of a crate.
+# • <max-stack-size> = The maximum amount of the key type that can be given.
+too-many-keys: §cYou can only give up to <max-stack-size> <crate> keys.
+
+# Messages with the following expressions:
+# • <crate-name> = The name of a crate.
+# • <player> = The name of a player.
+given-key-sender: §7You have given <player> a <crate-na,e> key!
+made-player-open: §7You have made <player> open a <crate-name>.
+
+# Messages with the following expressions:
+# • <crate> = The name of a crate.
+# • <location> = The location of the crate.
+placed-crate: §7You have placed a §a<crate-name> §7at §a<location>.
+
+# Messages with the following expressions:
+# • <crate> = The name of a crate.
+no-permission-open: §cYou do not have permission to open/view a <crate-name>.
+no-permission-place: §cYou do not have permission to place a <crate-name>.
+no-space: §cYou don't have enough space to claim these rewards. Please free up some space and try again.
+given-key-player: §7You have been given a <crate-name> key!

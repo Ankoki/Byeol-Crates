@@ -1,0 +1,8 @@
+# These are the settings to do with the crates.
+
+view-on-left-click: true # If you can view the possible rewards of the crate on left click.
+
+# Settings with the expressions:
+# • <crate> = The id of a crate.
+# • <crate-name> = The name of a crate.
+crate-inventory-name: §e<crate-name> Crate §8(§7<crate>§8)

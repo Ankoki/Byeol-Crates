@@ -1,0 +1,8 @@
+animations:
+  swipe:
+
+
+crates:
+  default:
+    name: Default Crate
+    loot-table:

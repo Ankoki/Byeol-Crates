@@ -1,0 +1,5 @@
+name: ByeolCrates
+main: com.ankoki.bcrates.ByeolCrates
+version: 1.0-BETA
+author: Ankoki
+api-version: 1.13

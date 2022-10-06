@@ -1,11 +1,14 @@
 package com.ankoki.bcrates;
 
+import com.ankoki.bcrates.internal.files.Crates;
+import com.ankoki.bcrates.internal.files.parsers.ErrorLog;
+import com.ankoki.bcrates.misc.Misc;
 import com.ankoki.byeol.Byeol;
 import com.ankoki.byeol.commands.CommandHandler;
 import com.ankoki.bcrates.api.crates.CrateItem;
 import com.ankoki.bcrates.api.crates.CrateType;
 import com.ankoki.bcrates.api.crates.LootTable;
-import com.ankoki.bcrates.api.crates.animations.DefaultAnimations;
+import com.ankoki.bcrates.api.animations.DefaultAnimations;
 import com.ankoki.bcrates.commands.CratesCommand;
 import com.ankoki.bcrates.commands.conveters.CrateTypeConverter;
 import com.ankoki.bcrates.internal.CrateHandler;
@@ -13,17 +16,22 @@ import com.ankoki.bcrates.internal.files.Config;
 import com.ankoki.bcrates.internal.files.CrateStorage;
 import com.ankoki.bcrates.internal.files.Messages;
 import com.ankoki.bcrates.misc.ItemUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class ByeolCrates extends JavaPlugin {
+public class ByeolCrates extends JavaPlugin implements Listener {
 
 	private CrateHandler handler;
 	private Messages messages;
 	private Config config;
 	private CrateStorage storage;
-
-	private boolean test = true;
+	private Crates crates;
+	private ErrorLog log;
 
 	@Override
 	public void onEnable() {
@@ -34,8 +42,12 @@ public class ByeolCrates extends JavaPlugin {
 		this.messages = new Messages(this);
 		this.config = new Config(this);
 		this.storage = new CrateStorage(this);
+		this.crates = new Crates(this);
 		this.getServer().getPluginManager().registerEvents(handler, this);
-		if (test) {
+		this.getServer().getPluginManager().registerEvents(this, this);
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> this.getStorage().saveFile(false),
+				36000L, (long) this.getConfiguration().BACKUP_INTERVAL.getTicks());
+		if (this.config.DEV_MODE) {
 			LootTable table = new LootTable(
 					new CrateItem(ItemUtils.getItem(Material.SUNFLOWER, "Test 1"), 95),
 					new CrateItem(ItemUtils.getItem(Material.PLAYER_HEAD, "Slay"), 45),
@@ -46,6 +58,11 @@ public class ByeolCrates extends JavaPlugin {
 					DefaultAnimations.SWIPE, Material.LIME_STAINED_GLASS, ItemUtils.getKey("test", Material.TRIPWIRE_HOOK, "Test Key"));
 			// Crate crate = new Crate(type, new Location(Bukkit.getWorld("world"), 100, 100, 100));
 		}
+	}
+
+	@Override
+	public void onDisable() {
+		this.getStorage().saveFile(false);
 	}
 
 	public CrateHandler getHandler() {
@@ -62,5 +79,31 @@ public class ByeolCrates extends JavaPlugin {
 
 	public CrateStorage getStorage() {
 		return storage;
+	}
+
+	public void setErrorLog(ErrorLog log) {
+		this.log = log;
+	}
+
+	/**
+	 * Reloads the given file name (messages or config). If file name is null or empty, both files will be reloaded.
+	 * @param string the file to reload, or null/empty.
+	 */
+	public void reload(String string) {
+		if (Misc.isNullOrEmpty(string)) {
+			this.messages.reload();
+			this.config.reload();
+		}
+		else if (string.equalsIgnoreCase("messages"))
+			this.messages.reload();
+		else if (string.equalsIgnoreCase("config"))
+			this.config.reload();
+	}
+
+	@EventHandler
+	private void onJoin(PlayerJoinEvent event) {
+		final Player player = event.getPlayer();
+		if (player.hasPermission("bcrates.errors") && log.hasErrors())
+			player.sendMessage(messages.get("on-join-error-message"));
 	}
 }

@@ -1,7 +1,7 @@
 package com.ankoki.bcrates.internal.files;
 
 import com.ankoki.bcrates.ByeolCrates;
-import org.bukkit.configuration.file.FileConfiguration;
+import com.ankoki.bcrates.internal.files.parsers.ErrorLog;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -13,7 +13,7 @@ public abstract class FileConfig {
 
 	private final ByeolCrates plugin;
 	private final File file;
-	private FileConfiguration configuration;
+	private YamlConfiguration configuration;
 
 	public FileConfig(ByeolCrates plugin, String string, boolean match) {
 		this.plugin = plugin;
@@ -31,16 +31,19 @@ public abstract class FileConfig {
 		this.configuration = YamlConfiguration.loadConfiguration(file);
 		if (match)
 			matchConfigFile();
-		loadFile();
+		ErrorLog log = new ErrorLog(plugin);
+		loadFile(log);
+		if (log.hasErrors())
+			log.printLog();
 	}
 
 	public void reload() {
 		this.configuration = YamlConfiguration.loadConfiguration(file);
 	}
 
-	public void loadFile(){}
+	public void loadFile(ErrorLog log){}
 
-	public FileConfiguration getConfig() {
+	public YamlConfiguration getConfig() {
 		return configuration;
 	}
 
@@ -49,15 +52,17 @@ public abstract class FileConfig {
 			boolean hasUpdated = false;
 			InputStream stream = plugin.getResource(file.getName());
 			InputStreamReader is = new InputStreamReader(stream);
-			YamlConfiguration defLand = YamlConfiguration.loadConfiguration(is);
-			for (String key : defLand.getConfigurationSection("").getKeys(true)) {
+			YamlConfiguration jarConfig = YamlConfiguration.loadConfiguration(is);
+			for (String key : jarConfig.getConfigurationSection("").getKeys(true)) {
 				if (!configuration.contains(key)) {
-					configuration.set(key, defLand.get(key));
+					configuration.set(key, jarConfig.get(key));
 					hasUpdated = true;
 				}
 			}
 			for (String key : configuration.getConfigurationSection("").getKeys(true)) {
-				if (!defLand.contains(key)) {
+				if (!jarConfig.contains(key)) {
+					if (file.getName().equalsIgnoreCase("config.yml") &&
+							key.equalsIgnoreCase("dev-mode")) continue;
 					configuration.set(key, null);
 					hasUpdated = true;
 				}

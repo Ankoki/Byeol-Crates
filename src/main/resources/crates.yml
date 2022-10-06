@@ -1,8 +1,110 @@
+# The base file contains an example animation and an example crate type.
+# You may remove these, however they are there to provide assistance with your first configuration.
+# Any errors will be shown on startup in console, and anyone who joins with the permission 'bcrates.errors' will be notified there was an error in console.
+# Please note if there are any errors, your console may spam large stacktraces. Please make sure to scroll past them and find the inital cause in the configs.
+
+# There are a few default animations you can use in the 'animation' key when declaring a crate.
+# You can use the following:
+# • swipe - 3 rows.
+# • portal - 5 rows.
 animations:
-  swipe:
+  snake: # This will be a very basic animation to show you what you can do.
+    ticks-between-pages: 5 # How many ticks between scrolling between pages. REQUIRED.
+    gui-rows: 3 # How many rows this animation requires.
+    page-1: # Name each section as page-<index>, starting from 1. This is in order.
+      - ooooooooo
+      - xoooooooo # Each string should be 9 characters long.
+      - ooooooooo
+    page-2:
+      - yoooooooo
+      - xxooooooo # Each character represents a slot in the gui.
+      - yoooooooo
+    page-3:
+      - xyooooooo
+      - xxxoooooo # Do note that capital letters are classed as different to their lowercase counterpart.
+      - xyooooooo
+    page-4:
+      - xxyoooooo
+      - xxxxooooo # The list length should be the same as the amount of gui rows.
+      - xxyoooooo
+    page-5:
+      - xxxyooooo
+      - xxxxxoooo # You can add as many pages as you would like. See you at the end...
+      - xxxyooooo
+    page-6:
+      - xxxxyoooo
+      - xxxxxxooo
+      - xxxxyoooo
+    page-7:
+      - xxxxxyooo
+      - xxxxxxxoo
+      - xxxxxyooo
+    page-8:
+      - xxxxxxyoo
+      - xxxxxxxxo
+      - xxxxxxyoo
+    page-9:
+      - xxxxxxxyo
+      - xxxxxxxxx
+      - xxxxxxxyo
+    page-10:
+      - xxxxxxxxy
+      - xxxxxxxxx
+      - xxxxxxxxy
+    page-11:
+      - xxxxxxxxx
+      - xxxxxxxxx
+      - xxxxxxxxx
+    page-12:
+      - xxxxxxxxx
+      - xxxxrxxxx
+      - xxxxxxxxx
+    item-1: # Now we can assign all the characters to an item! Again, name each section as item-<index> starting at 1.
+      character: x
+      item: # Here you can use the same options as the loot-table items, apart from chance, and use air as an item-type to account for empty spaces.
+        item-type: lime stained glass pane
+        blank: true # I've made it blank so that if you hover over, you do not see anything.
+    item-2:
+      character: y
+      item:
+        item-type: black stained glass pane
+        blank: true
+    item-3:
+      character: o
+      item:
+        item-type: air # We use this for the empty slots. This is not valid in loot-table item sections and only in animations.
+    item-4:
+      character: r # Now this is the special one.
+      item:
+        item-type: sunflower # You can still customise this anyway you would like.
+        name: §eCLAIM YOUR REWARDS
+        lore:
+          - §7Click here to claim the crate rewards.
+        result-item: true # In the animation items, you can set an item to the reward collector. When you click this item, you get the rewards from the crate.
+        shiny: true
+
 
 
 crates:
-  default:
-    name: Default Crate
+  default: # This will be the id of the crate. These must be unique.
+    name: Default Crate # This is the name, this is shown in the GUI's and holograms above. REQUIRED.
     loot-table:
+      can-get-multiple-of-same: true # If you can get multiple of the same crate item in one open. True by default.
+      minimum-reward-amount: 2 # The minimum amount of rewards you can get from this table. REQUIRED.
+      maximum-reward-amount: 4 # The maximum amount of rewards you can get from this table. REQUIRED.
+      item-1: # Name each section as item-<index>, starting from 1.
+        chance: 60 # The chance of getting this item out of 100. REQUIRED.
+        item-type: black wool # The type of this item. Must be a valid bukkit material, as shown at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html. You can uses spaces instead if _ and it be lowercase. REQUIRED.
+        name: §bCool Wool! # The custom display name of your item.
+        lore: # The custom lore of your item.
+          - §aLine one of your lore.
+          - §c§oLine Two of your lore!
+          - §e§kWhat does this say?
+        nbt: {Unbreakable:1b} # The nbt of this item. Examples of what you can do can be shown here https://minecraft.fandom.com/wiki/Tutorials/Command_NBT_tags.
+        enchantments: # The enchantments of the item. Must be a valid enchantment type with a level, valid enchantments can be seen here https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html.
+          - dig speed 3
+          - impaling 2
+        shiny: false # This is used to make an item have the enchantment glint without any enchantments. Defaults to false.
+        blank: false # This will make the item blank and render every other option useless. Makes the item have no name, no lore, no modifications at all.
+    animation: snake # This is the animation of the crate when opened. You can make your own above, or use one of our default ones. REQUIRED.
+    block-type: light blue stained glass # The block of this crate. Must be a valid bukkit material and be a block, as shown at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html. You can uses spaces instead if _ and it be lowercase. REQUIRED.

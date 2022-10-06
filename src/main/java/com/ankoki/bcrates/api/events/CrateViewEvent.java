@@ -1,13 +1,13 @@
-package com.ankoki.bcrates.api.crates.events;
+package com.ankoki.bcrates.api.events;
 
 import com.ankoki.bcrates.api.crates.Crate;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
-public class CrateOpenEvent extends CrateEvent {
+public class CrateViewEvent extends CrateEvent {
 
-	public CrateOpenEvent(Player player, Crate crate) {
-		super(player, crate);
+	public CrateViewEvent(Player who, Crate crate) {
+		super(who, crate);
 	}
 
 	public static HandlerList getHandlerList() {

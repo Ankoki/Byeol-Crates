@@ -10,6 +10,14 @@ must-be-player-error: §cYou must be a player to use this command.
 invalid-crate-id-error: §cThe given ID is not a valid crate id.
 set-block-too-far-error: §cYou must be looking at a block less than 20 blocks away.
 invalid-player-error: §cThe given player is not online.
+# Please note this will be sent in console AND to players/console that runs the /bbackup command.
+backup-success: §7The backup was successful.
+on-join-error-message: §cThere was an error parsing your configuration files. Please check console!
+
+# Messages with the following expressions:
+# • <file> = The file name.
+reload-command-success: §7You have reloaded the <file> successfully.
+reload-command-no-file-found: §cThe file <file> does not exist.
 
 # Messages with the following expressions:
 # • <crate-name> = The name of a crate.

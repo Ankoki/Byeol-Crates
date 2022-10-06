@@ -35,9 +35,23 @@ public class ItemUtils {
 	public static ItemStack getItem(Material material, String name, String... lore) {
 		ItemStack item = new ItemStack(material);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(name);
+		meta.setDisplayName(Misc.colour(name));
 		meta.setLore(Arrays.stream(lore).map(Misc::colour).collect(Collectors.toList()));
 		item.setItemMeta(meta);
+		return item;
+	}
+
+	/**
+	 * Gets an ItemStack used as a result claimer in a crate.
+	 * @param material the material.
+	 * @param name the name.
+	 * @param lore the lore.
+	 * @return the built item.
+	 */
+	public static ItemStack getResultItem(Material material, String name, String... lore) {
+		ItemStack item = ItemUtils.getItem(material, name, lore);
+		NBTItem nbt = new NBTItem(item);
+		nbt.setBoolean("breward", true);
 		return item;
 	}
 

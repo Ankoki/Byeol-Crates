@@ -2,11 +2,13 @@ package com.ankoki.bcrates.api.crates;
 
 import com.ankoki.bcrates.ByeolCrates;
 import org.bukkit.Location;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Crate {
+public class Crate implements ConfigurationSerializable {
 
 	/**
 	 * Creates a crate from a map.
@@ -15,20 +17,17 @@ public class Crate {
 	 */
 	public static Crate deserialize(Map<String, Object> map) {
 		return new Crate(ByeolCrates.getPlugin(ByeolCrates.class).getHandler()
-				.getCrateTypeById((String) map.get("crate")),
+				.getCrateTypeById((String) map.get("type-id")),
 				Location.deserialize((Map<String, Object>) map.get("location")));
 	}
 
 	/**
-	 * Gets a map from a crate.
-	 * @param crate the crate to serialize.
-	 * @return the map containing crate data.
+	 * Creates a crate from a map.
+	 * @param map the map to deserialize.
+	 * @return the deserialized crate.
 	 */
-	public static Map<String, Object> serialize(Crate crate) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("crate", crate.getType().getId());
-		map.put("location", crate.getLocation().serialize());
-		return map;
+	public static Crate valueOf(Map<String, Object> map) {
+		return Crate.deserialize(map);
 	}
 
 	private final CrateType type;
@@ -42,7 +41,7 @@ public class Crate {
 	public Crate(CrateType type, Location location) {
 		this.type = type;
 		this.location = location;
-		ByeolCrates.getPlugin(ByeolCrates.class).getHandler().placeCrate(location, type);
+		ByeolCrates.getPlugin(ByeolCrates.class).getHandler().placeCrate(this);
 	}
 
 	/**
@@ -59,5 +58,13 @@ public class Crate {
 	 */
 	public Location getLocation() {
 		return location;
+	}
+
+	@Override
+	public @NotNull Map<String, Object> serialize() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("type-id", this.getType().getId());
+		map.put("location", this.getLocation().serialize());
+		return map;
 	}
 }

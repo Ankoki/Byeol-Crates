@@ -1,4 +1,4 @@
-package com.ankoki.bcrates.api.crates.animations;
+package com.ankoki.bcrates.api.animations;
 
 import com.ankoki.bcrates.ByeolCrates;
 import com.ankoki.bcrates.misc.ItemUtils;

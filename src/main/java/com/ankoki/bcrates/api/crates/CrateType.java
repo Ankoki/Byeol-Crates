@@ -1,8 +1,8 @@
 package com.ankoki.bcrates.api.crates;
 
 import com.ankoki.bcrates.ByeolCrates;
-import com.ankoki.bcrates.api.crates.animations.CrateAnimation;
-import com.ankoki.bcrates.api.crates.animations.DefaultAnimations;
+import com.ankoki.bcrates.api.animations.CrateAnimation;
+import com.ankoki.bcrates.api.animations.DefaultAnimations;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

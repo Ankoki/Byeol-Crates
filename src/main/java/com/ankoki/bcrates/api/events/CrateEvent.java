@@ -1,4 +1,4 @@
-package com.ankoki.bcrates.api.crates.events;
+package com.ankoki.bcrates.api.events;
 
 import com.ankoki.bcrates.api.crates.Crate;
 import org.bukkit.entity.Player;

@@ -17,4 +17,13 @@ public class Messages extends FileConfig {
 	public String get(String path) {
 		return Misc.colour(prefix + this.getConfig().getString(path));
 	}
+
+	/**
+	 * Gets a message without a prefix.
+	 * @param path the path to get.
+	 * @return the semi-raw content.
+	 */
+	public String getRaw(String path) {
+		return Misc.colour(this.getConfig().getString(path));
+	}
 }

@@ -6,6 +6,7 @@ import org.bukkit.Location;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Misc {
 
@@ -48,5 +49,37 @@ public class Misc {
 			return "<none>";
 		return location.getX() + ", " + location.getY() + ", " + location.getZ() +
 				(location.getWorld() != null ? " in world '" + location.getWorld().getName() + "'" : "");
+	}
+
+	/**
+	 * Converts a string to title case.
+	 * For example, "hello world" to "Hello World",
+	 *
+	 * @param text text to be in title case.
+	 * @return string in title case.
+	 */
+	public static String toTitleCase(String text) {
+		if (text == null || text.isEmpty() || text.isBlank()) return "";
+		if (text.length() == 1) return text.toUpperCase();
+		text = text.replace("_", " ");
+
+		StringBuilder builder = new StringBuilder(text.length());
+
+		Stream.of(text.split(" ")).forEach(stringPart -> {
+			char[] charArray = stringPart.toLowerCase().toCharArray();
+			charArray[0] = Character.toUpperCase(charArray[0]);
+			builder.append(new String(charArray)).append(" ");
+		});
+		builder.setLength(builder.length() - 1);
+		return builder.toString();
+	}
+
+	/**
+	 * Checks to see if a string is null or empty.
+	 * @param s the string to check.
+	 * @return true if null or empty.
+	 */
+	public static boolean isNullOrEmpty(String s) {
+		return s == null || s.isEmpty();
 	}
 }

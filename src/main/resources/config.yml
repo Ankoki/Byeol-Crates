@@ -1,6 +1,10 @@
 # These are the settings to do with the crates.
 
-view-on-left-click: true # If you can view the possible rewards of the crate on left click.
+# If you can view the possible rewards of the crate on left click.
+view-on-left-click: true
+# The time between each saving of the crate. Supported timespans are milliseconds, seconds, minutes, hours and days.
+# First backup will be run 30 minutes after the server starts.
+backup-interval: 30 minutes
 
 # Settings with the expressions:
 # • <crate> = The id of a crate.

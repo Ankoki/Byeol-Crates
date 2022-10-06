@@ -3,7 +3,7 @@ package com.ankoki.bcrates.internal;
 import com.ankoki.bcrates.ByeolCrates;
 import com.ankoki.bcrates.api.crates.Crate;
 import com.ankoki.bcrates.api.crates.CrateType;
-import com.ankoki.bcrates.api.crates.animations.CrateAnimation;
+import com.ankoki.bcrates.api.animations.CrateAnimation;
 import com.ankoki.bcrates.misc.BPlayer;
 import de.tr7zw.nbtapi.NBTBlock;
 import de.tr7zw.nbtapi.NBTItem;
@@ -34,7 +34,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Registers a crate if the ID is not taken.
-	 *
 	 * @param crate the crate to register.
 	 * @return true if successful, false if the ID is in use.
 	 */
@@ -47,19 +46,18 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Places and registers a crate at the given location of the type.
-	 *
-	 * @param location the location to place the crate.
-	 * @param type     the type to make the crate.
+	 * Crate is cached on place.
+	 * @param crate the crate to place.
 	 */
-	public void placeCrate(Location location, CrateType type) {
-		location.getBlock().setType(type.getBlock().getType(), false);
-		NBTBlock block = new NBTBlock(location.getBlock());
-		block.getData().setString("bcrate", type.getId());
+	public void placeCrate(Crate crate) {
+		crate.getLocation().getBlock().setType(crate.getType().getBlock().getType(), false);
+		NBTBlock block = new NBTBlock(crate.getLocation().getBlock());
+		block.getData().setString("bcrate", crate.getType().getId());
+		this.CRATE_CACHE.add(crate);
 	}
 
 	/**
 	 * Breaks a crate a location.
-	 *
 	 * @param location the location to break a crate at.
 	 * @param drop     true if the crate block should be dropped.
 	 */
@@ -81,7 +79,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Gets a crate by its name.
-	 *
 	 * @param name the name look for.
 	 * @return the crate if it exists, else null.
 	 */
@@ -96,7 +93,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Gets a crate by its unique ID.
-	 *
 	 * @param id the id look for.
 	 * @return the crate if it exists, else null.
 	 */
@@ -105,13 +101,11 @@ public final class CrateHandler implements Listener {
 		for (CrateType crate : CRATE_TYPE_REGISTRY) {
 			if (crate.getId().equalsIgnoreCase(id))
 				return crate;
-		}
-		return null;
+		} return null;
 	}
 
 	/**
 	 * Checks if an item is a crate key.
-	 *
 	 * @param item  the item to check.
 	 * @param crate the crate to check for.
 	 * @return true if the item is a key.
@@ -123,7 +117,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Checks if the block at the location is a crate.
-	 *
 	 * @param location the location to check.
 	 * @return true if there is a crate.
 	 */
@@ -133,7 +126,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Checks if the block is a crate.
-	 *
 	 * @param block the block to check.
 	 * @return true if there is a crate.
 	 */
@@ -144,7 +136,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Checks if the block at the location is of the given crate type.
-	 *
 	 * @param location the location to check.
 	 * @param type     the type to check.
 	 * @return true if there is a crate of that type.
@@ -155,7 +146,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Checks if the block at the location is of the given crate type.
-	 *
 	 * @param block the block to check.
 	 * @param type  the type to check.
 	 * @return true if there is a crate of that type.
@@ -168,7 +158,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Gets a crate at a location, null if CrateHandler#isCrate(Location) is false.
-	 *
 	 * @param location the location to look for a crate.
 	 * @return the crate or null.
 	 */
@@ -179,7 +168,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Gets a crate at a block, null if CrateHandler#isCrate(Block) is false.
-	 *
 	 * @param block the block to look for a crate.
 	 * @return the crate or null.
 	 */
@@ -194,7 +182,6 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Opens a crate for the given player.
-	 *
 	 * @param crate  the crate to open.
 	 * @param player the player to open it for.
 	 */
@@ -212,9 +199,19 @@ public final class CrateHandler implements Listener {
 		animation.play(inventory);
 	}
 
+	/**
+	 * Gets all the currently placed/registered crates.
+	 * @return the crates.
+	 */
+	public Crate[] getCrates() {
+		return this.CRATE_CACHE.toArray(new Crate[0]);
+	}
+
 	@EventHandler
 	private void onCrateView(PlayerInteractEvent event) {
-		if (event.getHand() != EquipmentSlot.HAND || event.getAction() != Action.LEFT_CLICK_BLOCK) return;
+		if (event.getHand() != EquipmentSlot.HAND ||
+				event.getAction() != Action.LEFT_CLICK_BLOCK ||
+				!ByeolCrates.getPlugin(ByeolCrates.class).getConfiguration().LEFT_CLICK_VIEW) return;
 
 	}
 
@@ -237,7 +234,8 @@ public final class CrateHandler implements Listener {
 			BPlayer player = BPlayer.get(p);
 			if (player.isOpening() && player.getOpenCrateInventory() == event.getInventory()) {
 				event.setCancelled(true);
-				if (event.getCurrentItem() == CrateAnimation.RESULT_FILLER) {
+				NBTItem nbt = new NBTItem(event.getCurrentItem());
+				if (nbt.getBoolean("breward")) {
 					CrateType crate = player.getOpenCrate();
 					ItemStack[] items = crate.getLoot().generateRewards(ThreadLocalRandom.current(), crate.getMinimumRewards(), crate.getMaximumRewards());
 					if (player.canHold(items))

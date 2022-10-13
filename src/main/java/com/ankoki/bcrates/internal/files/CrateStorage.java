@@ -2,7 +2,7 @@ package com.ankoki.bcrates.internal.files;
 
 import com.ankoki.bcrates.ByeolCrates;
 import com.ankoki.bcrates.api.crates.Crate;
-import com.ankoki.bcrates.internal.files.parsers.ErrorLog;
+import com.ankoki.bcrates.internal.files.handlers.ByeolLog;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -13,7 +13,7 @@ public class CrateStorage extends FileConfig {
 	}
 
 	@Override
-	public void loadFile(ErrorLog log) {
+	public void loadFile(ByeolLog log) {
 		ConfigurationSection section = this.getConfig().getConfigurationSection("crates");
 		if (section == null)
 			return;

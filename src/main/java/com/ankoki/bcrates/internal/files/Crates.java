@@ -1,7 +1,7 @@
 package com.ankoki.bcrates.internal.files;
 
 import com.ankoki.bcrates.ByeolCrates;
-import com.ankoki.bcrates.internal.files.parsers.ErrorLog;
+import com.ankoki.bcrates.internal.files.handlers.ByeolLog;
 
 public class Crates extends FileConfig {
 
@@ -10,7 +10,7 @@ public class Crates extends FileConfig {
 	}
 
 	@Override
-	public void loadFile(ErrorLog log) {
+	public void loadFile(ByeolLog log) {
 		// TODO parse all animations and crate types.
 	}
 }

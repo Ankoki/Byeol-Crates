@@ -1,7 +1,7 @@
 package com.ankoki.bcrates;
 
 import com.ankoki.bcrates.internal.files.Crates;
-import com.ankoki.bcrates.internal.files.parsers.ErrorLog;
+import com.ankoki.bcrates.internal.files.handlers.ByeolLog;
 import com.ankoki.bcrates.misc.Misc;
 import com.ankoki.byeol.Byeol;
 import com.ankoki.byeol.commands.CommandHandler;
@@ -31,7 +31,7 @@ public class ByeolCrates extends JavaPlugin implements Listener {
 	private Config config;
 	private CrateStorage storage;
 	private Crates crates;
-	private ErrorLog log;
+	private ByeolLog log;
 
 	@Override
 	public void onEnable() {
@@ -81,7 +81,7 @@ public class ByeolCrates extends JavaPlugin implements Listener {
 		return storage;
 	}
 
-	public void setErrorLog(ErrorLog log) {
+	public void setErrorLog(ByeolLog log) {
 		this.log = log;
 	}
 

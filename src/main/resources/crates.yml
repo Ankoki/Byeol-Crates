@@ -9,7 +9,7 @@
 # • portal - 5 rows.
 animations:
   snake: # This will be a very basic animation to show you what you can do.
-    ticks-between-pages: 5 # How many ticks between scrolling between pages. REQUIRED.
+    time-between-pages: 5 ticks # How many ticks between scrolling between pages. REQUIRED.
     gui-rows: 3 # How many rows this animation requires.
     page-1: # Name each section as page-<index>, starting from 1. This is in order.
       - ooooooooo
@@ -62,21 +62,21 @@ animations:
     item-1: # Now we can assign all the characters to an item! Again, name each section as item-<index> starting at 1.
       character: x
       item: # Here you can use the same options as the loot-table items, apart from chance, and use air as an item-type to account for empty spaces.
-        item-type: lime stained glass pane
+        material: lime stained glass pane
         blank: true # I've made it blank so that if you hover over, you do not see anything.
     item-2:
       character: y
       item:
-        item-type: black stained glass pane
+        material: black stained glass pane
         blank: true
     item-3:
       character: o
       item:
-        item-type: air # We use this for the empty slots. This is not valid in loot-table item sections and only in animations.
+        material: air # We use this for the empty slots. This is not valid in loot-table item sections and only in animations.
     item-4:
       character: r # Now this is the special one.
       item:
-        item-type: sunflower # You can still customise this anyway you would like.
+        material: sunflower # You can still customise this anyway you would like.
         name: §eCLAIM YOUR REWARDS
         lore:
           - §7Click here to claim the crate rewards.
@@ -89,22 +89,41 @@ crates:
   default: # This will be the id of the crate. These must be unique.
     name: Default Crate # This is the name, this is shown in the GUI's and holograms above. REQUIRED.
     loot-table:
-      can-get-multiple-of-same: true # If you can get multiple of the same crate item in one open. True by default.
+      multiple-of-same: true # If you can get multiple of the same crate item in one open. True by default.
       minimum-reward-amount: 2 # The minimum amount of rewards you can get from this table. REQUIRED.
       maximum-reward-amount: 4 # The maximum amount of rewards you can get from this table. REQUIRED.
       item-1: # Name each section as item-<index>, starting from 1.
         chance: 60 # The chance of getting this item out of 100. REQUIRED.
-        item-type: black wool # The type of this item. Must be a valid bukkit material, as shown at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html. You can uses spaces instead if _ and it be lowercase. REQUIRED.
+        material: black wool # The type of this item. Must be a valid bukkit material, as shown at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html. You can uses spaces instead if _ and it can be lowercase. Also can be a skull, tackled in item-5 and item-6. REQUIRED.
+        amount: 3 # The amount of this item you want this item to have. The maximum is the maximum stack size of the type, e.g an ender pearl would be 16. Defaults to 1.
         name: §bCool Wool! # The custom display name of your item.
         lore: # The custom lore of your item.
           - §aLine one of your lore.
           - §c§oLine Two of your lore!
           - §e§kWhat does this say?
         nbt: {Unbreakable:1b} # The nbt of this item. Examples of what you can do can be shown here https://minecraft.fandom.com/wiki/Tutorials/Command_NBT_tags.
-        enchantments: # The enchantments of the item. Must be a valid enchantment type with a level, valid enchantments can be seen here https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html.
+        enchants: # The enchantments of the item. Must be a valid enchantment type with a level, valid enchantments can be seen here https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html.
           - dig speed 3
           - impaling 2
         shiny: false # This is used to make an item have the enchantment glint without any enchantments. Defaults to false.
         blank: false # This will make the item blank and render every other option useless. Makes the item have no name, no lore, no modifications at all.
+      item-2: # This item will show you how to create a crate key.
+        chance: 20
+        material: tripwire hook
+        name: §eDefault Crate Key
+        nbt: {bcrates:"default"} # You will need to have a custom nbt tag 'bcrates' with a value of the id of your crate.
+        shiny: true
+      item-3: # Remember your items don't have to be fancy, they can be dead simple items like so!
+        chance: 60
+        amount: 64
+        material: cooked beef
+      item-4: # You can also create a player's head from a player's name...
+        chance: 60
+        amount: 64
+        material: skull of Ankoki # The pattern is 'skull of <player's name> !
+      item-5: # Or using a base64 texture.
+        chance: 12
+        amount: 50
+        material: skull from texture eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmRiMDA4MDY4ODIzODQ0ZDEyOWVmZDgzOWM4MzA2NTBkOThlZWE4MTA0Y2YyYjMyNmE5YmU3ZGZiMTdhYjk5ZCJ9fX0= # The pattern is skull from <base64 texture>
     animation: snake # This is the animation of the crate when opened. You can make your own above, or use one of our default ones. REQUIRED.
     block-type: light blue stained glass # The block of this crate. Must be a valid bukkit material and be a block, as shown at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html. You can uses spaces instead if _ and it be lowercase. REQUIRED.

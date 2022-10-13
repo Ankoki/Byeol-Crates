@@ -1,7 +1,7 @@
 package com.ankoki.bcrates.internal.files;
 
 import com.ankoki.bcrates.ByeolCrates;
-import com.ankoki.bcrates.internal.files.parsers.ErrorLog;
+import com.ankoki.bcrates.internal.files.handlers.ByeolLog;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public abstract class FileConfig {
 		this.configuration = YamlConfiguration.loadConfiguration(file);
 		if (match)
 			matchConfigFile();
-		ErrorLog log = new ErrorLog(plugin);
+		ByeolLog log = new ByeolLog(plugin);
 		loadFile(log);
 		if (log.hasErrors())
 			log.printLog();
@@ -41,7 +41,7 @@ public abstract class FileConfig {
 		this.configuration = YamlConfiguration.loadConfiguration(file);
 	}
 
-	public void loadFile(ErrorLog log){}
+	public void loadFile(ByeolLog log){}
 
 	public YamlConfiguration getConfig() {
 		return configuration;

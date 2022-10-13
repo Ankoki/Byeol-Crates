@@ -58,7 +58,7 @@ public class CratesCommand {
 					.placeCrate(new Crate(crate, target.getLocation()));
 			player.sendMessage(messages.get("placed-crate")
 					.replace("<crate>", crate.getId())
-					.replace("<location>", Misc.adapt(target.getLocation())));
+					.replace("<location>", Misc.adaptLocation(target.getLocation())));
 		}
 	}
 

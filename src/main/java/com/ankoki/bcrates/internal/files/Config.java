@@ -1,7 +1,7 @@
 package com.ankoki.bcrates.internal.files;
 
 import com.ankoki.bcrates.ByeolCrates;
-import com.ankoki.bcrates.internal.files.parsers.ErrorLog;
+import com.ankoki.bcrates.internal.files.handlers.ByeolLog;
 import com.ankoki.bcrates.misc.Timespan;
 
 public class Config extends FileConfig {
@@ -15,11 +15,12 @@ public class Config extends FileConfig {
 	}
 
 	@Override
-	public void loadFile(ErrorLog log) {
+	public void loadFile(ByeolLog log) {
 		LEFT_CLICK_VIEW = this.getConfig().getBoolean("view-on-left-click");
+		// We can ignore this null warning due to the matchConfigFile() method.
 		BACKUP_INTERVAL = Timespan.of(this.getConfig().getString("backup-interval"));
 		if (BACKUP_INTERVAL == null)
-			log.log("'backup-interval' value '" +
+			log.error("'backup-interval' value '" +
 					this.getConfig().getString("backup-interval") +
 					"' is not a valid timespan (config.yml, line " + "TODO, LINE NUMBER)");
 		CRATE_INVENTORY_NAME = this.getConfig().getString("crate-inventory-name");

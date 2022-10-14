@@ -64,7 +64,6 @@ public class BPlayer {
 	 */
 	public void setViewedCrate(CrateType viewCrate) {
 		this.viewCrate = viewCrate;
-		this.update();
 	}
 
 	/**
@@ -81,7 +80,6 @@ public class BPlayer {
 	 */
 	public void setViewedCrateInventory(Inventory crate) {
 		this.viewCrateInventory = crate;
-		this.update();
 	}
 
 	/**
@@ -107,7 +105,6 @@ public class BPlayer {
 	 */
 	public void setOpenCrate(CrateType openCrate) {
 		this.openCrate = openCrate;
-		this.update();
 	}
 
 	/**
@@ -124,7 +121,6 @@ public class BPlayer {
 	 */
 	public void setOpenCrateInventory(Inventory crate) {
 		this.openCrateInventory = crate;
-		this.update();
 	}
 
 	/**

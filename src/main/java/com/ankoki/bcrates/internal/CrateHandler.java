@@ -187,7 +187,7 @@ public final class CrateHandler implements Listener {
 	 */
 	public void openCrate(CrateType crate, Player player) {
 		CrateAnimation animation = crate.getAnimation();
-		Inventory inventory = Bukkit.createInventory(player, crate.getRows() * 9,
+		Inventory inventory = Bukkit.createInventory(player, animation.getRowCount() * 9,
 				ByeolCrates.getPlugin(ByeolCrates.class)
 						.getConfiguration().CRATE_INVENTORY_NAME
 						.replace("<crate>", crate.getId())

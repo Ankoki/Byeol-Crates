@@ -56,6 +56,17 @@ public class ItemUtils {
 	}
 
 	/**
+	 * Gets an ItemStack used as a result claimer in a crate.
+	 * @param base the base ItemStack to convert.
+	 * @return the built item.
+	 */
+	public static ItemStack getResultItem(ItemStack base) {
+		NBTItem nbt = new NBTItem(base);
+		nbt.setBoolean("breward", true);
+		return nbt.getItem();
+	}
+
+	/**
 	 * Creates an ItemStack from the given options to become a crate key for the given key.
 	 * @param crate the crate the key can open.
 	 * @param material the material it should be.
@@ -69,15 +80,24 @@ public class ItemUtils {
 
 	/**
 	 * Creates an ItemStack from the given options to become a crate key for the given key.
-	 * @param id the id of the crate it should be.
+	 * @param id the id of the crate it should open.
 	 * @param material the material it should be.
 	 * @param name the name of the key.
 	 * @param lore the lore of the key.
 	 * @return the built key.
 	 */
 	public static ItemStack getKey(String id, Material material, String name, String... lore) {
-		ItemStack item = ItemUtils.getItem(material, name, lore);
-		NBTItem nbt = new NBTItem(item);
+		return ItemUtils.getKey(id, ItemUtils.getItem(material, name, lore));
+	}
+
+	/**
+	 * Creates a key from the base ItemStack.
+	 * @param id the id of the crate it should open.
+	 * @param base the base ItemStack to convert.
+	 * @return the built key.
+	 */
+	public static ItemStack getKey(String id, ItemStack base) {
+		NBTItem nbt = new NBTItem(base);
 		nbt.setString("bcrates", id);
 		return nbt.getItem();
 	}

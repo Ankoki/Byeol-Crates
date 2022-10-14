@@ -1,15 +1,18 @@
 package com.ankoki.bcrates.misc;
 
 import com.ankoki.bcrates.ByeolCrates;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -157,5 +160,25 @@ public class Misc {
 				number -= ROMAN_VALUES.get(roman.charAt(i));
 		}
 		return number;
+	}
+
+	/**
+	 * Gets a skull with a base 64 code.
+	 * @param base64 the code to get from.
+	 * @param item the base item, can be null.
+	 * @return the built head.
+	 */
+	public static ItemStack getBase64Skull(String base64, @Nullable ItemStack item) {
+		if (!base64.startsWith("http://textures.minecraft.net/texture/"))
+			base64 = "http://textures.minecraft.net/texture/" + base64;
+		if (item == null)
+			item = new ItemStack(Material.PLAYER_HEAD);
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
+		PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+		byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", base64).getBytes());
+		profile.setProperty(new ProfileProperty("textures", new String(encodedData)));
+		meta.setPlayerProfile(profile);
+		item.setItemMeta(meta);
+		return item;
 	}
 }

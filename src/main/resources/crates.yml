@@ -9,8 +9,8 @@
 # • portal - 5 rows.
 animations:
   snake: # This will be a very basic animation to show you what you can do.
-    time-between-pages: 5 ticks # How many ticks between scrolling between pages. REQUIRED.
-    gui-rows: 3 # How many rows this animation requires.
+    time-between-pages: 5 ticks # How many ticks between scrolling between pages. Does not include the initial page. REQUIRED.
+    gui-rows: 3 # How many rows this animation requires. REQUIRED.
     page-1: # Name each section as page-<index>, starting from 1. This is in order.
       - ooooooooo
       - xoooooooo # Each string should be 9 characters long.
@@ -88,6 +88,12 @@ animations:
 crates:
   default: # This will be the id of the crate. These must be unique.
     name: Default Crate # This is the name, this is shown in the GUI's and holograms above. REQUIRED.
+    key: # This is the key of the item. Has all the same settings as loot-item's apart from the 'chance'. REQUIRED.
+      material: tripwire hook
+      name: §eDefault Crate Key
+      lore:
+        - §7Right click this on a
+        - §7default crate to open!
     loot-table:
       multiple-of-same: true # If you can get multiple of the same crate item in one open. True by default.
       minimum-reward-amount: 2 # The minimum amount of rewards you can get from this table. REQUIRED.
@@ -105,6 +111,7 @@ crates:
         enchants: # The enchantments of the item. Must be a valid enchantment type with a level, valid enchantments can be seen here https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html.
           - dig speed 3
           - impaling 2
+        custom-model-data: 2421 # Sets the custom model data. Used for custom resource packs.
         shiny: false # This is used to make an item have the enchantment glint without any enchantments. Defaults to false.
         blank: false # This will make the item blank and render every other option useless. Makes the item have no name, no lore, no modifications at all.
       item-2: # This item will show you how to create a crate key.
@@ -120,7 +127,7 @@ crates:
       item-4: # You can also create a player's head from a player's name...
         chance: 60
         amount: 64
-        material: skull of Ankoki # The pattern is 'skull of <player's name> !
+        material: skull of Ankoki # The pattern is 'skull of <player's name>'!
       item-5: # Or using a base64 texture.
         chance: 12
         amount: 50

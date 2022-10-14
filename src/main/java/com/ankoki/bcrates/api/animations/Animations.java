@@ -2,12 +2,11 @@ package com.ankoki.bcrates.api.animations;
 
 import com.ankoki.bcrates.misc.ItemUtils;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
-public class DefaultAnimations {
+import java.util.HashMap;
+import java.util.Map;
 
-	private static ItemStack WHITE_PANE = ItemUtils.getBlank(Material.WHITE_STAINED_GLASS_PANE),
-							PURPLE_PANE = ItemUtils.getBlank(Material.PURPLE_STAINED_GLASS_PANE);
+public class Animations {
 
 	public static final CrateAnimation SWIPE = new CrateAnimationBuilder()
 			.setShape(1, "pwwwwwwww",
@@ -184,5 +183,39 @@ public class DefaultAnimations {
 			.setShapeItem('p', ItemUtils.getBlank(Material.PURPLE_STAINED_GLASS_PANE))
 			.setShapeItem('a', CrateAnimation.RESULT_FILLER)
 			.build();
+
+	private static final Map<String, CrateAnimation> ANIMATION_CACHE = new HashMap<>();
+
+	static {
+		ANIMATION_CACHE.put("swipe", SWIPE);
+		ANIMATION_CACHE.put("portal", PORTAL);
+	}
+
+	/**
+	 * Gets a crate animation by its registered name.
+	 * @param name the name to search.
+	 * @return the animation, or null if not found.
+	 */
+	public static CrateAnimation getAnimation(String name) {
+		return ANIMATION_CACHE.get(name);
+	}
+
+	/**
+	 * Checks if a key has been registered.
+	 * @param name the name to check.
+	 * @return true if registered.
+	 */
+	public static boolean hasAnimation(String name) {
+		return ANIMATION_CACHE.containsKey(name);
+	}
+
+	/**
+	 * Registers an animation under a name.
+	 * @param name the name to register it under.
+	 * @param animation the animation to register.
+	 */
+	public static void registerAnimation(String name, CrateAnimation animation) {
+		ANIMATION_CACHE.put(name, animation);
+	}
 
 }

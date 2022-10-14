@@ -2,7 +2,8 @@ package com.ankoki.bcrates.api.crates;
 
 import com.ankoki.bcrates.ByeolCrates;
 import com.ankoki.bcrates.api.animations.CrateAnimation;
-import com.ankoki.bcrates.api.animations.DefaultAnimations;
+import com.ankoki.bcrates.api.animations.Animations;
+import com.ankoki.bcrates.misc.ItemUtils;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -11,7 +12,7 @@ public class CrateType {
 
 	private final String name, id;
 	private final LootTable loot;
-	private final int rows, minimumRewards, maximumRewards;
+	private final int minimumRewards, maximumRewards;
 	private final CrateAnimation animation;
 	private final ItemStack block;
 	private final ItemStack key;
@@ -20,31 +21,29 @@ public class CrateType {
 	 * Creates a new crate type. Is registered on creation.
 	 * @param name the name of the crate.
 	 * @param id the id of the crate. Must be unique.
+	 * @param key the ItemStack base the key for this crate is.
 	 * @param loot the loot table of the crate.
-	 * @param rows the rows the Inventory should have when opened.
 	 * @param minimumRewards the minimum rewards you can earn from the crate.
 	 * @param maximumRewards the maximum rewards you can earn from the crate.
-	 * @param animation the animation to play. Take a look at {@link DefaultAnimations}
+	 * @param animation the animation to play. Take a look at {@link Animations}
 	 * @param block the block to set the crate too. Must have {@link Material#isBlock()} return true.
 	 */
 	public CrateType(String name,
 					 String id,
+					 ItemStack key,
 					 LootTable loot,
-					 int rows,
 					 int minimumRewards,
 					 int maximumRewards,
 					 CrateAnimation animation,
-					 Material block,
-					 ItemStack key) {
+					 Material block) {
 		this.name = name;
 		this.id = id;
+		this.key = ItemUtils.getKey(id, key);
 		this.loot = loot;
-		this.rows = rows;
 		this.minimumRewards = minimumRewards;
 		this.maximumRewards = maximumRewards;
-		this.animation = animation != null ? animation : DefaultAnimations.SWIPE;
+		this.animation = animation != null ? animation : Animations.SWIPE;
 		this.block = this.getBlockFrom(block);
-		this.key = key;
 		ByeolCrates.getPlugin(ByeolCrates.class).getHandler().registerCrateType(this);
 	}
 
@@ -70,14 +69,6 @@ public class CrateType {
 	 */
 	public LootTable getLoot() {
 		return loot;
-	}
-
-	/**
-	 * Gets the amount of rows the inventory should have.
-	 * @return the rows.
-	 */
-	public int getRows() {
-		return rows;
 	}
 
 	/**

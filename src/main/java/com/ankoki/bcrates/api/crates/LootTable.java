@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class LootTable {
 
 	private CrateItem[] loot;
+	private boolean multipleSame = true;
 
 	/**
 	 * Creates a new LootTable for a crate.
@@ -24,6 +25,14 @@ public class LootTable {
 	 */
 	public CrateItem[] getLoot() {
 		return loot;
+	}
+
+	/**
+	 * Sets whether you can get multiple of the same item in one open.
+	 * @param multipleSame true if you can.
+	 */
+	public void setMultipleSame(boolean multipleSame) {
+		this.multipleSame = multipleSame;
 	}
 
 	/**
@@ -56,7 +65,8 @@ public class LootTable {
 		final List<ItemStack> items = new ArrayList<>();
 		while (items.size() < minimum) {
 			for (CrateItem item : loot) {
-				if (random.nextDouble(0, 100) < item.getChance())
+				if (random.nextDouble(0, 100) < item.getChance() &&
+						(!multipleSame && !items.contains(item.getItem())))
 					items.add(item.getItem());
 			}
 		}

@@ -8,7 +8,7 @@ import com.ankoki.byeol.commands.CommandHandler;
 import com.ankoki.bcrates.api.crates.CrateItem;
 import com.ankoki.bcrates.api.crates.CrateType;
 import com.ankoki.bcrates.api.crates.LootTable;
-import com.ankoki.bcrates.api.animations.DefaultAnimations;
+import com.ankoki.bcrates.api.animations.Animations;
 import com.ankoki.bcrates.commands.CratesCommand;
 import com.ankoki.bcrates.commands.conveters.CrateTypeConverter;
 import com.ankoki.bcrates.internal.CrateHandler;
@@ -54,8 +54,8 @@ public class ByeolCrates extends JavaPlugin implements Listener {
 					new CrateItem(ItemUtils.getItem(Material.BEEF, "BEEEEF"), 25),
 					new CrateItem(ItemUtils.getItem(Material.DEAD_BRAIN_CORAL, "sea"), 54),
 					new CrateItem(ItemUtils.getItem(Material.GILDED_BLACKSTONE, "blackstone"), 12));
-			CrateType type = new CrateType("Test", "test", table, 3, 1, 3,
-					DefaultAnimations.SWIPE, Material.LIME_STAINED_GLASS, ItemUtils.getKey("test", Material.TRIPWIRE_HOOK, "Test Key"));
+			CrateType type = new CrateType("Test", "test", ItemUtils.getKey("test", Material.TRIPWIRE_HOOK, "Test Crate Key"), table, 1, 3,
+					Animations.SWIPE, Material.LIME_STAINED_GLASS);
 			// Crate crate = new Crate(type, new Location(Bukkit.getWorld("world"), 100, 100, 100));
 		}
 	}

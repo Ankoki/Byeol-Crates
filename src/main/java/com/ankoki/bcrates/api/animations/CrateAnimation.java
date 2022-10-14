@@ -20,19 +20,45 @@ public class CrateAnimation {
 	private int rowCount;
 	private int ticksBetween;
 
+	/**
+	 * Creates a new empty animation.
+	 * @param rowCount the rows this animation will have.
+	 * @param ticksBetween the ticks between each page.
+	 */
 	public CrateAnimation(int rowCount, int ticksBetween) {
 		this.rowCount = rowCount;
 		this.ticksBetween = ticksBetween;
 	}
 
+	/**
+	 * Sets the rows this animation requires.
+	 * @param rowCount the new count.
+	 */
 	public void setRowCount(int rowCount) {
 		this.rowCount = rowCount;
 	}
 
+	/**
+	 * Gets the amount of rows this animation has.
+	 * @return the rows of this animation.
+	 */
+	public int getRowCount() {
+		return rowCount;
+	}
+
+	/**
+	 * Sets the ticks between each page of the animation.
+	 * @param ticksBetweenEach the ticks between each page.
+	 */
 	public void setTicksBetween(int ticksBetweenEach) {
 		this.ticksBetween = ticksBetweenEach;
 	}
 
+	/**
+	 * Adds a new page to this animation.
+	 * @param items the items the next page should show. The length of this array should be equal to CrateItem#getRowCount() * 9.
+	 * @return the current animation for chaining.
+	 */
 	public CrateAnimation addPage(ItemStack... items) {
 		if (items.length > 9 * rowCount)
 			throw new IllegalArgumentException("Cannot fit that many items (" + 9 * rowCount + ") in a page with this size.");
@@ -49,6 +75,10 @@ public class CrateAnimation {
 		return this;
 	}
 
+	/**
+	 * Plays the current animation for an inventory.
+	 * @param inventory the inventory to play it for.
+	 */
 	public void play(Inventory inventory) {
 		if (inventory.getSize() / 9 != this.rowCount)
 			throw new IllegalArgumentException("The given inventory must be the same size as CrateAnimation#rowCount.");

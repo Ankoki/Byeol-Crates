@@ -6,8 +6,8 @@ import org.bukkit.event.HandlerList;
 
 public class CrateViewEvent extends CrateEvent {
 
-	public CrateViewEvent(Player who, Crate crate) {
-		super(who, crate);
+	public CrateViewEvent(Player player, Crate crate) {
+		super(player, crate);
 	}
 
 	public static HandlerList getHandlerList() {

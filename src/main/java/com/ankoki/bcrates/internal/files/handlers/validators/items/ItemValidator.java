@@ -1,9 +1,8 @@
-package com.ankoki.bcrates.internal.files.handlers.validators;
+package com.ankoki.bcrates.internal.files.handlers.validators.items;
 
 import com.ankoki.bcrates.internal.files.handlers.ByeolLog;
+import com.ankoki.bcrates.internal.files.handlers.validators.Validator;
 import com.ankoki.bcrates.misc.Misc;
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.NbtApiException;
@@ -15,17 +14,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 public class ItemValidator implements Validator<ItemStack> {
 
-	private static final String[] ALL_KEYS = new String[]{"material", "nbt", "blank", "shiny", "amount", "name", "lore", "enchantments"};
-	private static final String[] REQUIRED_KEYS = new String[]{"material"};
-	private static final String[] OPTIONAL_KEYS = new String[]{"nbt", "blank", "shiny", "amount", "name", "lore", "enchants"};
+	private static final String[] ALL_KEYS = new String[]{"material", "nbt", "blank", "enchants", "shiny", "amount", "name", "lore"};
 
 	@Override
 	public boolean validate(ConfigurationSection section, ByeolLog log) {
@@ -84,7 +78,7 @@ public class ItemValidator implements Validator<ItemStack> {
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			meta.setOwningPlayer(Bukkit.getOfflinePlayer(name));
 		} else if (material.toUpperCase().startsWith("SKULL FROM "))
-			item = ItemValidator.getBase64Skull(material.split("SKULL FROM ")[1], item);
+			item = Misc.getBase64Skull(material.split("SKULL FROM ")[1], item);
 		else {
 			if (item == null)
 				item = new ItemStack(Misc.adaptMaterial(material));
@@ -144,26 +138,35 @@ public class ItemValidator implements Validator<ItemStack> {
 			}
 		}
 
-		return item;
-	}
+		// AMOUNT
+		if (section.contains("amount"))
+			item.setAmount(Math.min(item.getMaxStackSize(), section.getInt("amount")));
 
-	/**
-	 * Gets a skull with a base 64 code.
-	 * @param base64 the code to get from.
-	 * @param item the base item, can be null.
-	 * @return the built head.
-	 */
-	public static ItemStack getBase64Skull(String base64, @Nullable ItemStack item) {
-		if (!base64.startsWith("http://textures.minecraft.net/texture/"))
-			base64 = "http://textures.minecraft.net/texture/" + base64;
-		if (item == null)
-			item = new ItemStack(Material.PLAYER_HEAD);
-		SkullMeta meta = (SkullMeta) item.getItemMeta();
-		PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
-		byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", base64).getBytes());
-		profile.setProperty(new ProfileProperty("textures", new String(encodedData)));
-		meta.setPlayerProfile(profile);
-		item.setItemMeta(meta);
+		// NAME
+		if (section.contains("name")) {
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(Misc.colour(section.getString("name")));
+			item.setItemMeta(meta);
+		}
+
+		// LORE
+		if (section.contains("lore")) {
+			List<String> lore = section.getStringList("lore");
+			for (int i = 0; i < lore.size() - 1; i++)
+				lore.set(i, Misc.colour(lore.get(i)));
+			ItemMeta meta = item.getItemMeta();
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+		}
+
+		// CUSTOM MODEL DATA
+		if (section.contains("custom-model-data")) {
+			int data = section.getInt("custom-model-data");
+			ItemMeta meta = item.getItemMeta();
+			meta.setCustomModelData(data);
+			item.setItemMeta(meta);
+		}
+
 		return item;
 	}
 }

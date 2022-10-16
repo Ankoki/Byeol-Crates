@@ -10,7 +10,18 @@ public class AnimationValidator implements Validator<CrateAnimation> {
 
 	@Override
 	public boolean validate(ConfigurationSection section, ByeolLog log) {
-		return false;
+		boolean hasErrors = false;
+		for (String key : REQUIRED_KEYS) {
+			if (!section.contains(key)) {
+				log.error("Required key '" + key + "' was not found. (@" + section.getName() + ":crates.yml)");
+				hasErrors = true;
+			}
+		}
+		if (!section.contains("page-1")) {
+			log.error("There are no pages in this animation. There has to be atleast 1. (@" + section.getName() + ":crates.yml)");
+			hasErrors = true;
+		}
+		return !hasErrors;
 	}
 
 	@Override

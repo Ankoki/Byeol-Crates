@@ -43,11 +43,11 @@ public class ByeolLog {
 	}
 
 	/**
-	 * Checks if the current logger has any errors.
-	 * @return true if there are errors.
+	 * Checks if the current logger has any output.
+	 * @return true if there is output.
 	 */
-	public boolean hasErrors() {
-		return !errors.isEmpty();
+	public boolean hasOutput() {
+		return !errors.isEmpty() || !warnings.isEmpty() || !infos.isEmpty();
 	}
 
 	/**

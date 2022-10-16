@@ -103,7 +103,7 @@ public class ByeolCrates extends JavaPlugin implements Listener {
 	@EventHandler
 	private void onJoin(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
-		if (player.hasPermission("bcrates.errors") && log.hasErrors())
+		if (player.hasPermission("bcrates.errors") && log.hasOutput())
 			player.sendMessage(messages.get("on-join-error-message"));
 	}
 }

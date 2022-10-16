@@ -31,19 +31,19 @@ public class ItemValidator implements Validator<ItemStack> {
 		String material = section.getString("material");
 		if (!Misc.isNullOrEmpty(material) &&
 				!material.toUpperCase().startsWith("SKULL OF ") &&
-				!material.toUpperCase().startsWith("SKULL FROM ") &&
+				!material.toUpperCase().startsWith("SKULL FROM TEXTURE ") &&
 				Misc.adaptMaterial(material) == null) {
 			log.error("Value of key 'material' (" + material + ") is not valid (@" + section.getName() + ":crates.yml). Must match a material or one of the following patterns: " +
 					"\n • skull of <playername>" +
-					"\n • skull from <base64>");
+					"\n • skull from texture <base64>");
 			hasErrors = true;
 		} else if (material.toUpperCase().startsWith("SKULL OF ") &&
 				material.toUpperCase().split("SKULL OF ").length == 1) {
 			log.error("You must declare a player name when using the 'skull of <playername>' pattern. (@" + section.getName() + ":crates.yml)");
 			hasErrors = true;
-		} else if (material.toUpperCase().startsWith("SKULL FROM ") &&
-				material.toUpperCase().split("SKULL FROM ").length == 1) {
-			log.error("You must declare a base64 key when using the 'skull from <base64>' pattern. (@" + section.getName() + ":crates.yml)");
+		} else if (material.toUpperCase().startsWith("SKULL FROM TEXTURE ") &&
+				material.toUpperCase().split("SKULL FROM TEXTURE ").length == 1) {
+			log.error("You must declare a base64 key when using the 'skull from texture <base64>' pattern. (@" + section.getName() + ":crates.yml)");
 			hasErrors = true;
 		}
 		for (String key : section.getKeys(false)) {
@@ -77,8 +77,8 @@ public class ItemValidator implements Validator<ItemStack> {
 				item.setType(Material.PLAYER_HEAD);
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			meta.setOwningPlayer(Bukkit.getOfflinePlayer(name));
-		} else if (material.toUpperCase().startsWith("SKULL FROM "))
-			item = Misc.getBase64Skull(material.split("SKULL FROM ")[1], item);
+		} else if (material.toUpperCase().startsWith("SKULL FROM TEXTURE "))
+			item = Misc.getBase64Skull(material.split("SKULL FROM TEXTURE ")[1], item);
 		else {
 			if (item == null)
 				item = new ItemStack(Misc.adaptMaterial(material));

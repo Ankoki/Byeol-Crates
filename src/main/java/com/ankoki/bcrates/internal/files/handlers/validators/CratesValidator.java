@@ -74,10 +74,10 @@ public class CratesValidator implements Validator<CrateType> {
 		else
 			hasErrors = true;
 		ConfigurationSection table = section.getConfigurationSection("loot-table");
-		for (int i = 0; true; i++) {
+		for (int i = 1; true; i++) {
 			ConfigurationSection itemSection = table.getConfigurationSection("item-" + i);
 			if (itemSection == null) {
-				if (i == 0) {
+				if (i == 1) {
 					log.error("There are no item's in this crates loot-table. (@" + section.getName() + ":crates.yml)");
 					hasErrors = true;
 				} else

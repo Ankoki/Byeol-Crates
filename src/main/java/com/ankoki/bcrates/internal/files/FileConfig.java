@@ -33,7 +33,7 @@ public abstract class FileConfig {
 			matchConfigFile();
 		ByeolLog log = new ByeolLog(plugin);
 		loadFile(log);
-		if (log.hasErrors())
+		if (log.hasOutput())
 			log.printLog();
 	}
 

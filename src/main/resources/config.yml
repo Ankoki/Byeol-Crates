@@ -5,6 +5,8 @@ view-on-left-click: true
 # The time between each saving of the crate. Supported timespans are milliseconds, seconds, minutes, hours and days.
 # First backup will be run 30 minutes after the server starts.
 backup-interval: 30 minutes
+# Whether to drop the crate item when it is broken.
+drop-on-break: false
 
 # Settings with the expressions:
 # • <crate> = The id of a crate.

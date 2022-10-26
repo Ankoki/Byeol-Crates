@@ -4,7 +4,11 @@ import com.ankoki.bcrates.ByeolCrates;
 import com.ankoki.bcrates.api.crates.Crate;
 import com.ankoki.bcrates.api.crates.CrateType;
 import com.ankoki.bcrates.api.animations.CrateAnimation;
+import com.ankoki.bcrates.api.events.CrateBreakEvent;
+import com.ankoki.bcrates.api.events.CratePlaceEvent;
+import com.ankoki.bcrates.internal.files.Messages;
 import com.ankoki.bcrates.misc.BPlayer;
+import com.ankoki.bcrates.misc.Misc;
 import de.tr7zw.nbtapi.NBTBlock;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
@@ -15,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -58,23 +64,24 @@ public final class CrateHandler implements Listener {
 
 	/**
 	 * Breaks a crate a location.
-	 * @param location the location to break a crate at.
+	 * @param block the block to break a crate at.
 	 * @param drop     true if the crate block should be dropped.
 	 */
-	public void breakCrate(Location location, boolean drop) {
-		NBTBlock block = new NBTBlock(location.getBlock());
-		if (!block.getData().hasKey("bcrate"))
+	public void breakCrate(Block block, boolean drop) {
+		if (!this.isCrate(block))
 			return;
+		NBTBlock nbt = new NBTBlock(block);
+		Location location = block.getLocation();
 		if (drop) {
-			CrateType type = this.getCrateTypeById(block.getData().getString("bcrate"));
+			CrateType type = this.getCrateTypeById(nbt.getData().getString("bcrate"));
 			if (type == null) {
-				block.getData().removeKey("bcrate");
+				nbt.getData().removeKey("bcrate");
 				return;
 			}
 			location.getWorld().dropItem(location, type.getBlock());
 		}
-		location.getBlock().setType(Material.AIR);
-		block.getData().removeKey("bcrate");
+		block.setType(Material.AIR);
+		nbt.getData().removeKey("bcrate");
 	}
 
 	/**
@@ -211,21 +218,30 @@ public final class CrateHandler implements Listener {
 	private void onCrateView(PlayerInteractEvent event) {
 		if (event.getHand() != EquipmentSlot.HAND ||
 				event.getAction() != Action.LEFT_CLICK_BLOCK ||
-				!ByeolCrates.getPlugin(ByeolCrates.class).getConfiguration().LEFT_CLICK_VIEW) return;
+				!ByeolCrates.getPlugin(ByeolCrates.class).getConfiguration().LEFT_CLICK_VIEW)
+			return;
 
 	}
 
 	@EventHandler
 	private void onCrateOpen(PlayerInteractEvent event) {
-		if (event.getHand() != EquipmentSlot.HAND || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+		if (event.getHand() != EquipmentSlot.HAND || event.getAction() != Action.RIGHT_CLICK_BLOCK)
+			return;
 		Block block = event.getClickedBlock();
-		if (!this.isCrate(block)) return;
+		if (!this.isCrate(block))
+			return;
 		event.setCancelled(true);
 		final Crate crate = this.getCrate(block);
-		final Player p = event.getPlayer();
-		final ItemStack item = p.getInventory().getItemInMainHand();
-		if (item == crate.getType().getKey())
-			this.openCrate(crate.getType(), p);
+		final Player player = event.getPlayer();
+		if (!player.hasPermission("bcrates.open." + crate.getType().getId()))
+			player.sendMessage(ByeolCrates.getPlugin(ByeolCrates.class)
+					.getMessages()
+					.get("no-permission-open"));
+		else {
+			final ItemStack item = player.getInventory().getItemInMainHand();
+			if (item == crate.getType().getKey())
+				this.openCrate(crate.getType(), player);
+		}
 	}
 
 	@EventHandler
@@ -268,6 +284,59 @@ public final class CrateHandler implements Listener {
 				p.closeInventory();
 				player.setViewedCrate(null);
 				player.setViewedCrateInventory(null);
+			}
+		}
+	}
+
+	@EventHandler
+	private void onCratePlace(BlockPlaceEvent event) {
+		Player player = event.getPlayer();
+		ItemStack crateItem = event.getItemInHand();
+		NBTItem item = new NBTItem(crateItem);
+		if (item.hasKey("bcrate")) {
+			CrateType type = this.getCrateTypeById(item.getString("bcrate"));
+			if (type == null)
+				return;
+			final Messages messages = ByeolCrates.getPlugin(ByeolCrates.class).getMessages();
+			final Location location = event.getBlock().getLocation();
+			if (!player.hasPermission("bcrates.place." + type.getId()))
+				player.sendMessage(messages.get("no-permission-place")
+						.replace("<crate>", type.getName()));
+			else {
+				Crate crate = new Crate(type, location);
+				CratePlaceEvent crateEvent = new CratePlaceEvent(player, crate);
+				if (crateEvent.isCancelled())
+					return;
+				ByeolCrates.getPlugin(ByeolCrates.class).getHandler().placeCrate(crate);
+				player.sendMessage(messages.get("placed-crate")
+						.replace("<crate>", type.getName())
+						.replace("<location>", Misc.adaptLocation(location)));
+			}
+		}
+	}
+
+	@EventHandler
+	private void onCrateBreak(BlockBreakEvent event) {
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
+		if (this.isCrate(block)) {
+			Crate crate = this.getCrate(block);
+			final Messages messages = ByeolCrates.getPlugin(ByeolCrates.class).getMessages();
+			final Location location = event.getBlock().getLocation();
+			if (!player.hasPermission("bcrates.break." + crate.getType().getId()))
+				player.sendMessage(messages.get("no-permission-break")
+						.replace("<crate>", crate.getType().getName()));
+			else {
+				CrateBreakEvent crateEvent = new CrateBreakEvent(player, crate);
+				if (crateEvent.isCancelled())
+					return;
+				ByeolCrates.getPlugin(ByeolCrates.class).getHandler().breakCrate(block,
+						ByeolCrates.getPlugin(ByeolCrates.class)
+								.getConfiguration()
+								.DROP_ON_BREAK);
+				player.sendMessage(messages.get("broken-crate")
+						.replace("<crate>", crate.getType().getName())
+						.replace("<location>", Misc.adaptLocation(location)));
 			}
 		}
 	}

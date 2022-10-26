@@ -16,9 +16,11 @@ public class Crate implements ConfigurationSerializable {
 	 * @return the deserialized crate.
 	 */
 	public static Crate deserialize(Map<String, Object> map) {
-		return new Crate(ByeolCrates.getPlugin(ByeolCrates.class).getHandler()
+		Crate crate = new Crate(ByeolCrates.getPlugin(ByeolCrates.class).getHandler()
 				.getCrateTypeById((String) map.get("type-id")),
 				Location.deserialize((Map<String, Object>) map.get("location")));
+		ByeolCrates.getPlugin(ByeolCrates.class).getHandler().placeCrate(crate);
+		return crate;
 	}
 
 	/**
@@ -35,13 +37,13 @@ public class Crate implements ConfigurationSerializable {
 
 	/**
 	 * Creates a new crate object and sets the block at the location to the crate.
+	 * You need to place this yourself using {@link com.ankoki.bcrates.internal.CrateHandler#placeCrate(Crate)}
 	 * @param type the crate type.
 	 * @param location the location of the crate.
 	 */
 	public Crate(CrateType type, Location location) {
 		this.type = type;
 		this.location = location;
-		ByeolCrates.getPlugin(ByeolCrates.class).getHandler().placeCrate(this);
 	}
 
 	/**

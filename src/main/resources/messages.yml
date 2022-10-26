@@ -20,24 +20,29 @@ reload-command-success: §7You have reloaded the <file> successfully.
 reload-command-no-file-found: §cThe file <file> does not exist.
 
 # Messages with the following expressions:
-# • <crate-name> = The name of a crate.
+# • <crate> = The name of a crate.
 # • <max-stack-size> = The maximum amount of the key type that can be given.
 too-many-keys: §cYou can only give up to <max-stack-size> <crate> keys.
 
 # Messages with the following expressions:
-# • <crate-name> = The name of a crate.
+# • <crate> = The name of a crate.
 # • <player> = The name of a player.
-given-key-sender: §7You have given <player> a <crate-na,e> key!
-made-player-open: §7You have made <player> open a <crate-name>.
+given-key-sender: §7You have given <player> a <crate> key!
+made-player-open: §7You have made <player> open a <crate>.
+no-space-crate-message: §c<player> do(es) not have enough space for this <crate>.
+given-crate-sender-message: §7<player> has received a <crate>.
+given-crate-receiver-message: §7<player> has given you a <crate>.
 
 # Messages with the following expressions:
 # • <crate> = The name of a crate.
 # • <location> = The location of the crate.
-placed-crate: §7You have placed a §a<crate-name> §7at §a<location>.
+placed-crate: §7You have placed a §a<crate> §7at §a<location>.
+broken-crate: §7You have broken a §c<crate> §7 at §c<location>.
 
 # Messages with the following expressions:
 # • <crate> = The name of a crate.
-no-permission-open: §cYou do not have permission to open/view a <crate-name>.
-no-permission-place: §cYou do not have permission to place a <crate-name>.
-no-space: §cYou don't have enough space to claim these rewards. Please free up some space and try again.
-given-key-player: §7You have been given a <crate-name> key!
+no-permission-open: §cYou do not have permission to open/view a <crate>.
+no-permission-break: §cYou do not have permission to break a <crate>.
+no-permission-place: §cYou do not have permission to place a <crate>.
+no-space: §cYou don't have enough space to claim the rewards from this <crate>. Please free up some space and try again.
+given-key-player: §7You have been given a <crate> key!

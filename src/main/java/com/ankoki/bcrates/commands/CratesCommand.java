@@ -18,7 +18,7 @@ public class CratesCommand {
 	@CommandHook(name = "bkey")
 	private void bkey(CommandSender sender, Player p, CrateType crate, int amount) {
 		final Messages messages = ByeolCrates.getPlugin(ByeolCrates.class).getMessages();
-		if (sender.hasPermission("bcrates.command.key")) {
+		if (sender.hasPermission("bcrates.command.bkey")) {
 			BPlayer player = BPlayer.get(p);
 			ItemStack key = crate.getKey();
 			if (amount > key.getMaxStackSize()) {
@@ -36,13 +36,13 @@ public class CratesCommand {
 		} else sender.sendMessage(messages.get("no-permission-command-error"));
 	}
 
-	@CommandHook(name = "setbcrate")
-	private void setbcrate(Player p, CrateType crate) {
+	@CommandHook(name = "bsetcrate")
+	private void bsetcrate(Player p, CrateType crate) {
 		final Messages messages = ByeolCrates.getPlugin(ByeolCrates.class).getMessages();
 		if (p == null) {
 			Bukkit.getConsoleSender().sendMessage(messages.get("must-be-player-error"));
 			return;
-		} else if (!p.hasPermission("bcrates.command.setcrate")) {
+		} else if (!p.hasPermission("bcrates.command.bsetcrate")) {
 			p.sendMessage(messages.get("no-permission-command-error"));
 		}
 		BPlayer player = BPlayer.get(p);
@@ -62,10 +62,10 @@ public class CratesCommand {
 		}
 	}
 
-	@CommandHook(name = "openbcrate")
-	private void openbcrate(CommandSender sender, Player p, CrateType crate) {
+	@CommandHook(name = "bopencrate")
+	private void bopencrate(CommandSender sender, Player p, CrateType crate) {
 		final Messages messages = ByeolCrates.getPlugin(ByeolCrates.class).getMessages();
-		if (!sender.hasPermission("bcrates.command.openbcrate"))
+		if (!sender.hasPermission("bcrates.command.bopencrate"))
 			sender.sendMessage(messages.get("no-permission-command-error"));
 		else if (p == null)
 			sender.sendMessage(messages.get("invalid-player-error"));
@@ -119,6 +119,32 @@ public class CratesCommand {
 			sender.sendMessage(ByeolCrates.getPlugin(ByeolCrates.class)
 					.getMessages()
 					.get("backup-success"));
+		}
+	}
+
+	@CommandHook(name = "bcrate")
+	private void bcrate(Player player, CrateType type, Player p) {
+		final Messages messages = ByeolCrates.getPlugin(ByeolCrates.class).getMessages();
+		if (player == null)
+			Bukkit.getConsoleSender().sendMessage(messages.get("must-be-player-error"));
+		else if (!player.hasPermission("bcrates.command.bcrate"))
+			player.sendMessage(messages.get("no-permission-command-error"));
+		else if (type == null)
+			player.sendMessage(messages.get("invalid-crate-id-error"));
+		else {
+			Player receiver = p == null ? player : p;
+			if (receiver.getInventory().addItem(type.getBlock()).isEmpty()) {
+				player.sendMessage(messages.get("given-crate-sender-message")
+						.replace("<player>", receiver.getName())
+						.replace("<crate>", type.getName()));
+				if (receiver != player)
+					receiver.sendMessage(messages.get("given-crate-receiver-message")
+							.replace("<player>", player.getName())
+							.replace("<crate>", type.getName()));
+			} else
+				player.sendMessage(messages.get("no-space-crate-message")
+						.replace("<player>", receiver.getName())
+						.replace("<crate>", type.getName()));
 		}
 	}
 }

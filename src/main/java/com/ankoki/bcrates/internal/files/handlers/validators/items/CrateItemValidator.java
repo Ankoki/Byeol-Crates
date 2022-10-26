@@ -13,7 +13,7 @@ public class CrateItemValidator implements Validator<CrateItem> {
 
 	@Override
 	public boolean validate(ConfigurationSection section, ByeolLog log) {
-		boolean hasErrors = ITEM_VALIDATOR.validate(section, log);
+		boolean hasErrors = !ITEM_VALIDATOR.validate(section, log);
 		for (String key : REQUIRED_KEYS) {
 			if (!section.contains(key)) {
 				log.error("Required key '" + key + "' was not found. (@" + section.getName() + ":crates.yml)");

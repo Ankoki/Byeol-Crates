@@ -1,5 +1,6 @@
 package com.ankoki.bcrates.api.animations;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -86,7 +87,7 @@ public class CrateAnimationBuilder {
 	 * @return the current builder for chaining.
 	 */
 	public CrateAnimationBuilder setShapeItem(char c, ItemStack item) {
-		shapes.put(c, item);
+		shapes.put(c, item == null ? new ItemStack(Material.AIR) : item);
 		return this;
 	}
 

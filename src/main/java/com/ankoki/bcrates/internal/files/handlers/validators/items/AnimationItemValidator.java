@@ -12,7 +12,8 @@ public class AnimationItemValidator implements Validator<ItemStack> {
 
 	@Override
 	public boolean validate(ConfigurationSection section, ByeolLog log) {
-		return ITEM_VALIDATOR.validate(section, log);
+		boolean hasErrors = !ITEM_VALIDATOR.validate(section, log);
+		return !hasErrors;
 	}
 
 	@Override
